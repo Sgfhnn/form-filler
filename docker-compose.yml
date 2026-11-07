@@ -1,0 +1,19 @@
+services:
+  demo:
+    image: python:3.12-slim
+    command: python -m http.server 8080 --directory /srv
+    volumes:
+      - ./demo-form:/srv:ro
+    ports:
+      - "8080:8080"
+
+  agent:
+    build: ./agent
+    environment:
+      # Vultr Serverless Inference (OpenAI-compatible) for the field check.
+      LLM_BASE_URL: "${LLM_BASE_URL:-}"
+      LLM_API_KEY: "${LLM_API_KEY:-}"
+      LLM_MODEL: "${LLM_MODEL:-}"
+    volumes:
+      - ./runs:/app/runs
+    working_dir: /app

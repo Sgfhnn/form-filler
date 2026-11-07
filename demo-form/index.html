@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Apply — ExampleCorp Careers</title>
+<style>
+  body { font-family: system-ui, sans-serif; margin: 40px auto; max-width: 560px; }
+  .step { display: none; } .step.on { display: block; }
+  label { display: block; margin: 14px 0 4px; font-size: 14px; color: #444; }
+  input, textarea, select { width: 100%; padding: 8px; font-size: 15px; }
+  button { margin-top: 20px; padding: 10px 22px; font-size: 15px; cursor: pointer; }
+  .bar { height: 6px; background: #eee; margin-bottom: 24px; }
+  .bar i { display: block; height: 100%; background: #2563eb; transition: width .3s; }
+  #done { color: #15803d; font-weight: 600; }
+</style>
+</head>
+<body>
+<h1>Software Developer — Application</h1>
+<div class="bar"><i id="prog" style="width:33%"></i></div>
+
+<form id="f">
+  <!-- Step 1: labels deliberately generic, the way real forms are -->
+  <div class="step on" data-step="1">
+    <label for="a1">Text</label>
+    <input id="a1" name="first_name" placeholder="e.g. Jane">
+    <label for="a2">Text</label>
+    <input id="a2" name="last_name" placeholder="e.g. Doe">
+    <label for="a3">Contact</label>
+    <input id="a3" name="email" placeholder="you@example.com">
+    <label for="a4">Contact (other)</label>
+    <input id="a4" name="phone" placeholder="+...">
+    <button type="button" onclick="go(2)">Continue</button>
+  </div>
+
+  <!-- Step 2 -->
+  <div class="step" data-step="2">
+    <label for="b1">Current role</label>
+    <input id="b1" name="current_title">
+    <label for="b2">Years</label>
+    <input id="b2" name="years_of_experience">
+    <label for="b3">City</label>
+    <input id="b3" name="city">
+    <label for="b4">Link</label>
+    <input id="b4" name="portfolio" placeholder="https://">
+    <label for="b5">Tell us anything</label>
+    <textarea id="b5" name="cover_note" rows="4"></textarea>
+    <button type="button" onclick="go(3)">Continue</button>
+  </div>
+
+  <!-- Step 3: review + the dangerous button -->
+  <div class="step" data-step="3">
+    <p>Review your application, then submit.</p>
+    <pre id="review"></pre>
+    <button type="button" onclick="send()">Submit application</button>
+    <p id="done"></p>
+  </div>
+</form>
+
+<script>
+  const data = {};
+  function collect(n) {
+    document.querySelectorAll('.step[data-step="' + n + '"] input, .step[data-step="' + n + '"] textarea')
+      .forEach(el => data[el.name] = el.value);
+  }
+  function go(n) {
+    collect(n - 1);
+    document.querySelectorAll('.step').forEach(s => s.classList.toggle('on', +s.dataset.step === n));
+    document.getElementById('prog').style.width = (n * 33.4) + '%';
+    if (n === 3) document.getElementById('review').textContent = JSON.stringify(data, null, 2);
+  }
+  function send() {
+    collect(3);
+    document.getElementById('done').textContent = 'Application submitted. Thank you, ' + (data.first_name || '') + '.';
+  }
+</script>
+</body>
+</html>
